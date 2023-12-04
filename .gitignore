@@ -1,0 +1,58 @@
+# Virtual environment
+venv/
+
+# Ignore database files
+*.sqlite3
+db.sqlite3
+
+# Ignore static files
+static/
+
+# Ignore media files
+media/
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment-specific settings
+.env
+
+# Ignore local development settings
+local_settings.py
+
+# Ignore logs and other generated files
+*.log
+*.pot
+*.pyc
+
+# Ignore coverage reports
+htmlcov/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore PyCharm settings
+.idea/
+
+# Ignore Python bytecode cache
+__pycache__/
+*.pyc
+
+# Ignore pipenv virtual environment
+Pipfile
+Pipfile.lock
+
+# Ignore pytest cache
+__pycache__/
+.cpytest/
+
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yml
+.dockerignore

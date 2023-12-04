@@ -1,0 +1,182 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <title> {% block title %} Instawork {% endblock %} </title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div id="content" name="content"> 
+        <h3 style="margin-bottom: 5px;">Team members</h3>
+        <span class="grey">
+            You have {{ size }} team members <button id="addMemberBtn" class=" editMemberBtn"><i class="fa-solid fa-plus"></i></button>
+        </span>
+    
+        {% for member in members %}
+            <div class="member-container" data-member-id="{{ member.id }}">
+                <p>
+                    <i class="fa-regular fa-user"></i>
+                    <span class="member-names">
+                        <button class="editMemberBtn editMemberBtn{{ member.id }}"> 
+                            <span class="member-first-name">{{ member.first_name }}</span>
+                            <span class="member-last-name">{{ member.last_name }}</span>
+                            {% if member.is_admin %}
+                                (Admin)
+                            {% endif %}
+                        </button>
+                    </span><br>
+                    <span class="member-phone grey">{{ member.phone }}</span><br>
+                    <span class="member-email grey">{{ member.email }}</span><br>
+                </p>
+            </div>
+        {% endfor %}
+    
+        <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div> 
+                            <h5 class="modal-title" id="addMemberModalLabel">Add a team member</h5>
+                            <p class="smaller-and-grey">Set email, location, and role</p>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'add_member' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="_method" value="POST">
+                            <label>Info:</label><br>
+                            <input type="text" name="first_name" placeholder="first name" required class="input-style"><br>
+                            <input type="text" name="last_name" placeholder="last name" required class="input-style"><br>
+                            <input type="tel" name="phone_number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required class="input-style"><br>
+                            <input type="email" name="email" placeholder="your email" required class="input-style"><br>
+                            <label>Role:</label><br>
+                            <input type="radio" name="is_admin" value="False"> Regular - Can't delete members<br>
+                            <input type="radio" name="is_admin" value="True" checked> Admin - Can delete members<br>
+                            <br>
+                            <button type="submit" class="btn btn-outline-primary">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="modal fade" id="editMemberModal" tabindex="-1" role="dialog" aria-labelledby="editMemberModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div>
+                            <h5 class="modal-title" id="editMemberModalLabel">Edit team member</h5>
+                            <p class="smaller-and-grey">Edit contact info, location, and role</p>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'edit_member' %}" id="editMemberForm">
+                            {% csrf_token %}
+                            <input type="hidden" name="_method" value="PUT">
+                            <label>Info:</label><br>
+                            <input type="text" name="first_name" placeholder="first name" required class="input-style"><br>
+                            <input type="text" name="last_name" placeholder="last name" required class="input-style"><br>
+                            <input type="tel" name="phone_number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required class="input-style"><br>
+                            <input type="email" name="email" placeholder="your email" required class="input-style"><br>
+                            <label>Role:</label><br>
+                            <input type="radio" name="is_admin" value="False"> Regular - Can't delete members<br>
+                            <input type="radio" name="is_admin" value="True" checked> Admin - Can delete members<br>
+                            <br>
+                            <button type="button" class="btn btn-outline-danger" id="deleteBtn">Delete</button>
+                            <button type="submit" class="btn btn-outline-primary ml-auto" id="saveBtn">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <script>
+            document.getElementById('addMemberBtn').addEventListener('click', function() {
+                $('#addMemberModal').modal('show');
+            });
+    
+            document.querySelectorAll('[class^="editMemberBtn"]').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    $('#editMemberModal').modal('show');
+                    var memberContainer = button.closest('.member-container');
+                    setMemberDetails(memberContainer, 'editMemberForm');
+                });
+            });
+    
+            document.getElementById('deleteBtn').addEventListener('click', function() {
+                var firstName = document.querySelector('#editMemberForm [name="first_name"]').value;
+                var lastName = document.querySelector('#editMemberForm [name="last_name"]').value;
+    
+                var deleteForm = document.createElement('form');
+                deleteForm.method = 'post';
+                deleteForm.action = '{% url "delete_member" %}';
+    
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+                deleteForm.appendChild(csrfInput);
+    
+                var firstNameInput = document.createElement('input');
+                firstNameInput.type = 'hidden';
+                firstNameInput.name = 'first_name';
+                firstNameInput.value = firstName;
+                deleteForm.appendChild(firstNameInput);
+    
+                var lastNameInput = document.createElement('input');
+                lastNameInput.type = 'hidden';
+                lastNameInput.name = 'last_name';
+                lastNameInput.value = lastName;
+                deleteForm.appendChild(lastNameInput);
+    
+                document.body.appendChild(deleteForm);
+                deleteForm.submit();
+            });
+    
+            function toggleFormVisibility(formId) {
+                var form = document.getElementById(formId);
+                form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+            }
+    
+            function setMemberDetails(memberContainer, formId) {
+                var form = document.getElementById(formId);
+                var firstName = memberContainer.querySelector('.member-first-name').innerText;
+                var lastName = memberContainer.querySelector('.member-last-name').innerText;
+                var phone = memberContainer.querySelector('.member-phone').innerText;
+                var email = memberContainer.querySelector('.member-email').innerText;
+    
+                form.querySelector('[name="first_name"]').value = firstName;
+                form.querySelector('[name="last_name"]').value = lastName;
+                form.querySelector('[name="first_name"]').readOnly = true;
+                form.querySelector('[name="last_name"]').readOnly = true;
+                form.querySelector('[name="phone_number"]').value = phone;
+                form.querySelector('[name="email"]').value = email;
+            }
+        </script>
+    </div>
+    <p> {{name}} </p>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://kit.fontawesome.com/393a442c8a.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+   
