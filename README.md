@@ -29,9 +29,11 @@ Run the following command in your home directory:
 Visit http://localhost:8000 in your browser. 
 You should see the following:
 
-<img width="325" alt="Screen Shot 2023-12-03 at 10 10 14 PM" src="https://github.com/linynjosh/team-management-app/assets/63569843/b5ab34a2-6630-45e8-ad93-d4d5251a49a1">
+<img width="269" alt="Screen Shot 2023-12-04 at 3 49 03 PM" src="https://github.com/linynjosh/team-management-app/assets/63569843/0fe1d913-cf9b-4f64-a05e-a767ade1ee01">
 
-You can add team members by pressing the plus sign: <img width="1038" alt="Screen Shot 2023-12-03 at 10 11 22 PM" src="https://github.com/linynjosh/team-management-app/assets/63569843/af5870b6-8e56-4864-9666-299a46736ec9">
 
-You can edit or delete a team member by clicking his/her name:<img width="1038" alt="Screen Shot 2023-12-03 at 10 12 15 PM" src="https://github.com/linynjosh/team-management-app/assets/63569843/c54755c4-0380-4ea9-b017-17872e1cd4af">
+You can add team members by pressing the plus sign<img width="1010" alt="Screen Shot 2023-12-04 at 3 49 24 PM" src="https://github.com/linynjosh/team-management-app/assets/63569843/3cc2cb7e-5687-446d-92ed-582e77bce941">
+
+You can edit or delete a team member by clicking his/her name:<img width="1010" alt="Screen Shot 2023-12-04 at 3 50 02 PM" src="https://github.com/linynjosh/team-management-app/assets/63569843/84306c99-cfc8-4ae1-bd2a-c4f11a46b227">
+
 
