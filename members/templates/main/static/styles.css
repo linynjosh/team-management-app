@@ -1,0 +1,36 @@
+body {
+    padding: 40px;
+}
+
+.member-container {
+    margin-bottom: 40; 
+}
+
+#addMemberBtn {
+    margin-top: 5px; 
+    margin-bottom: 20px;
+    color: blue;
+}
+
+.editMemberBtn {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    color: black; 
+    text-decoration: bold;
+}
+
+.smaller-and-grey {
+    font-size: smaller;
+    color: grey;
+}
+
+.input-style {
+    margin-bottom: 10px;
+}
+
+.grey {
+    color: grey
+}

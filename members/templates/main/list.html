@@ -38,7 +38,7 @@
                 </p>
             </div>
         {% endfor %}
-    
+
         <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -70,7 +70,7 @@
                 </div>
             </div>
         </div>
-    
+        
         <div class="modal fade" id="editMemberModal" tabindex="-1" role="dialog" aria-labelledby="editMemberModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -84,7 +84,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" action="{% url 'edit_member' %}" id="editMemberForm">
+                        <form method="post" id="editMemberForm">
                             {% csrf_token %}
                             <input type="hidden" name="_method" value="PUT">
                             <label>Info:</label><br>
@@ -105,10 +105,12 @@
         </div>
     
         <script>
+
+
             document.getElementById('addMemberBtn').addEventListener('click', function() {
                 $('#addMemberModal').modal('show');
             });
-    
+        
             document.querySelectorAll('[class^="editMemberBtn"]').forEach(function(button) {
                 button.addEventListener('click', function() {
                     $('#editMemberModal').modal('show');
@@ -116,55 +118,57 @@
                     setMemberDetails(memberContainer, 'editMemberForm');
                 });
             });
-    
+        
             document.getElementById('deleteBtn').addEventListener('click', function() {
                 var firstName = document.querySelector('#editMemberForm [name="first_name"]').value;
                 var lastName = document.querySelector('#editMemberForm [name="last_name"]').value;
-    
+        
                 var deleteForm = document.createElement('form');
                 deleteForm.method = 'post';
                 deleteForm.action = '{% url "delete_member" %}';
-    
+        
                 var csrfInput = document.createElement('input');
                 csrfInput.type = 'hidden';
                 csrfInput.name = 'csrfmiddlewaretoken';
                 csrfInput.value = document.getElementsByName('csrfmiddlewaretoken')[0].value;
                 deleteForm.appendChild(csrfInput);
-    
+        
                 var firstNameInput = document.createElement('input');
                 firstNameInput.type = 'hidden';
                 firstNameInput.name = 'first_name';
                 firstNameInput.value = firstName;
                 deleteForm.appendChild(firstNameInput);
-    
+        
                 var lastNameInput = document.createElement('input');
                 lastNameInput.type = 'hidden';
                 lastNameInput.name = 'last_name';
                 lastNameInput.value = lastName;
                 deleteForm.appendChild(lastNameInput);
-    
+        
                 document.body.appendChild(deleteForm);
                 deleteForm.submit();
             });
-    
+        
             function toggleFormVisibility(formId) {
                 var form = document.getElementById(formId);
                 form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
             }
-    
+        
             function setMemberDetails(memberContainer, formId) {
                 var form = document.getElementById(formId);
                 var firstName = memberContainer.querySelector('.member-first-name').innerText;
                 var lastName = memberContainer.querySelector('.member-last-name').innerText;
                 var phone = memberContainer.querySelector('.member-phone').innerText;
                 var email = memberContainer.querySelector('.member-email').innerText;
-    
+        
                 form.querySelector('[name="first_name"]').value = firstName;
                 form.querySelector('[name="last_name"]').value = lastName;
                 form.querySelector('[name="first_name"]').readOnly = true;
                 form.querySelector('[name="last_name"]').readOnly = true;
                 form.querySelector('[name="phone_number"]').value = phone;
                 form.querySelector('[name="email"]').value = email;
+                
+                form.action = '/edit_member/' + encodeURIComponent(firstName) + '/' + encodeURIComponent(lastName) + '/';
             }
         </script>
     </div>
